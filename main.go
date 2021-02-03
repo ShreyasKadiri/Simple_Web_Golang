@@ -2,19 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "This is a simple server")
-}
-
-func aboutHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "About Handler")
-}
-
 func main() {
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/about", aboutHandler)
-	http.ListenAndServe(":5000", nil)
+	resp, _ := http.Get("https://www.washingtonpost.com/news-sitemap-index.xml")
+	bytes, _ := ioutil.ReadAll(resp.Body)
+	string_body := string(bytes)
+	fmt.Println(string_body)
+	resp.Body.Close()
 }
